@@ -17,8 +17,13 @@ var init = () => {
   document.body.appendChild(renderer.domElement);
 
   // Make a cube
-  var geometry = new THREE.BoxGeometry(1,1,1);
+  var texture = new THREE.TextureLoader();
+  texture.crossOrigin = '';
+  texture.load('images/speckle.png');
+
+  var geometry = new THREE.BoxBufferGeometry(1,1,1);
   var material = new THREE.MeshPhongMaterial({
+    //map: texture,
     color: 0x00ff00,
     shading: THREE.FlatShading,
     overdraw: 0.5,
@@ -27,6 +32,10 @@ var init = () => {
   cube = new THREE.Mesh(geometry, material);
 
   scene.add(cube);
+
+  // Rotation uses radians
+  // cube.rotation.x = Math.PI / 4; // 90deg
+  // cube.rotation.y = Math.PI / 2; // 90deg
 
   // Ambient Light
   var ambient = new THREE.AmbientLight( 0x101010 );
@@ -47,7 +56,6 @@ var render = function() {
 }
 
 // Animate the scene, from here: https://threejs.org/examples/#webgl_geometry_cube
-
 var animate = () => {
   requestAnimationFrame(animate);
   cube.rotation.x += 0.005;
@@ -58,4 +66,5 @@ var animate = () => {
 
 init();
 
+//render();
 animate();
