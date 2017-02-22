@@ -16,13 +16,13 @@ var init = () => {
   renderer.shadowMap.enabled = true;
 
   // Fog
-  scene.fog = new THREE.FogExp2( 0x999999, 0.010 );
-  renderer.setClearColor( scene.fog.color );
+  scene.fog = new THREE.FogExp2(0x999999, 0.010);
+  renderer.setClearColor(scene.fog.color);
 
   document.body.appendChild(renderer.domElement);
 
   // Control the camera
-  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.minDistance = 1.5;
   controls.maxDistance = 50;
   //controls.maxPolarAngle = Math.PI/ 1.5;
@@ -51,14 +51,14 @@ var init = () => {
   //scene.add(cube);
 
   // Add a bunch of cubes instead
-  for ( var i = 0; i < 500; i ++ ) {
-    var mesh = new THREE.Mesh( geometry, material );
-    mesh.position.x = ( Math.random() - 0.5 ) * 50;
-    mesh.position.y = ( Math.random() - 0.5 ) * 50;
-    mesh.position.z = ( Math.random() - 0.5 ) * 50;
+  for (var i = 0; i < 500; i ++) {
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = (Math.random() - 0.5) * 50;
+    mesh.position.y = (Math.random() - 0.5) * 50;
+    mesh.position.z = (Math.random() - 0.5) * 50;
     mesh.updateMatrix();
     mesh.matrixAutoUpdate = false;
-    scene.add( mesh );
+    scene.add(mesh);
   }
 
   // Rotation uses radians
@@ -70,17 +70,17 @@ var init = () => {
   scene.add(ambient);
 
   // 2 Directional Lights
-  light = new THREE.DirectionalLight( 0xffffff );
-  light.position.set( 1, 1, 1 );
-  scene.add( light );
-  light = new THREE.DirectionalLight( 0x002288 );
-  light.position.set( -1, -1, -1 );
-  scene.add( light );
+  light = new THREE.DirectionalLight(0xffffff);
+  light.position.set(1, 1, 1);
+  scene.add(light);
+  light = new THREE.DirectionalLight(0x002288);
+  light.position.set(-1, -1, -1);
+  scene.add(light);
 
   // Axis display
-  scene.add( new THREE.AxisHelper( 20 ) );
+  scene.add(new THREE.AxisHelper(20));
 
-  window.addEventListener( 'resize', onWindowResize, false );
+  window.addEventListener('resize', onWindowResize, false);
 };
 
 // Render the scene
@@ -99,10 +99,10 @@ var animate = () => {
 };
 
 // Resize canvas on browser resize
-function onWindowResize() {
+var onWindowResize = () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 init();
