@@ -16,7 +16,7 @@ var init = () => {
   renderer.shadowMap.enabled = true;
 
   // Fog
-  scene.fog = new THREE.FogExp2(0x999999, 0.010);
+  scene.fog = new THREE.FogExp2(0x999999, 0.002);
   renderer.setClearColor(scene.fog.color);
 
   document.body.appendChild(renderer.domElement);
@@ -24,7 +24,7 @@ var init = () => {
   // Control the camera
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.minDistance = 1.5;
-  controls.maxDistance = 50;
+  controls.maxDistance = 500;
   //controls.maxPolarAngle = Math.PI/ 1.5;
 
   // Try texture, it doesn't work right out of the box
@@ -36,7 +36,7 @@ var init = () => {
   var image = THREE.ImageUtils.loadTexture('images/speckle.png');
 
   // Make a cube
-  var geometry = new THREE.BoxBufferGeometry(1.5,1.5,1.5);
+  var geometry = new THREE.BoxBufferGeometry(10, 10, 10);
   var material = new THREE.MeshPhongMaterial({
     //map: texture,
     map: image,
@@ -44,8 +44,16 @@ var init = () => {
     color: 0x99a7ee,
     specular: 0x666666, // shininess from #fff (shiniest) to #000 (matte)
     shading: THREE.FlatShading,
-    //overdraw: 0.5,
+    overdraw: 0.5,
   });
+
+  var redMaterial = new THREE.MeshPhongMaterial({ color: 0xff00ff, shading: THREE.FlatShading, side: THREE.DoubleSide });
+  object = new THREE.Mesh(new THREE.RingGeometry(10, 50, 20, 5, 0, Math.PI * 2), redMaterial);
+  scene.add(object);
+
+  object = new THREE.Mesh( new THREE.TorusGeometry(25, 8, 360, 720), material);
+  object.position.set(-20, 0, 40);
+  scene.add(object);
 
   //cube = new THREE.Mesh(geometry, material);
   //scene.add(cube);
@@ -53,9 +61,9 @@ var init = () => {
   // Add a bunch of cubes instead
   for (var i = 0; i < 500; i ++) {
     var mesh = new THREE.Mesh(geometry, material);
-    mesh.position.x = (Math.random() - 0.5) * 50;
-    mesh.position.y = (Math.random() - 0.5) * 50;
-    mesh.position.z = (Math.random() - 0.5) * 50;
+    mesh.position.x = (Math.random() - 0.5) * 500;
+    mesh.position.y = (Math.random() - 0.5) * 500;
+    mesh.position.z = (Math.random() - 0.5) * 500;
     mesh.updateMatrix();
     mesh.matrixAutoUpdate = false;
     scene.add(mesh);
