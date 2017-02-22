@@ -5,48 +5,82 @@ var renderer;
 var cube;
 
 var init = () => {
+  // Scene, camera, renderer
   scene = new THREE.Scene();
 
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 3;
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
-
   renderer.shadowMap.enabled = true;
+
+  // Fog
+  scene.fog = new THREE.FogExp2( 0x999999, 0.010 );
+  renderer.setClearColor( scene.fog.color );
 
   document.body.appendChild(renderer.domElement);
 
-  // Make a cube
+  // Control the camera
+  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  controls.minDistance = 1.5;
+  controls.maxDistance = 50;
+  //controls.maxPolarAngle = Math.PI/ 1.5;
+
+  // Try texture, it doesn't work right out of the box
   var texture = new THREE.TextureLoader();
   texture.crossOrigin = '';
   texture.load('images/speckle.png');
 
-  var geometry = new THREE.BoxBufferGeometry(1,1,1);
+  // Use an image instead
+  var image = THREE.ImageUtils.loadTexture('images/speckle.png');
+
+  // Make a cube
+  var geometry = new THREE.BoxBufferGeometry(1.5,1.5,1.5);
   var material = new THREE.MeshPhongMaterial({
     //map: texture,
-    color: 0x00ff00,
+    map: image,
+    //color: 0x00ff00,
+    color: 0x99a7ee,
+    specular: 0x666666, // shininess from #fff (shiniest) to #000 (matte)
     shading: THREE.FlatShading,
-    overdraw: 0.5,
+    //overdraw: 0.5,
   });
 
-  cube = new THREE.Mesh(geometry, material);
+  //cube = new THREE.Mesh(geometry, material);
+  //scene.add(cube);
 
-  scene.add(cube);
+  // Add a bunch of cubes instead
+  for ( var i = 0; i < 500; i ++ ) {
+    var mesh = new THREE.Mesh( geometry, material );
+    mesh.position.x = ( Math.random() - 0.5 ) * 50;
+    mesh.position.y = ( Math.random() - 0.5 ) * 50;
+    mesh.position.z = ( Math.random() - 0.5 ) * 50;
+    mesh.updateMatrix();
+    mesh.matrixAutoUpdate = false;
+    scene.add( mesh );
+  }
 
   // Rotation uses radians
   // cube.rotation.x = Math.PI / 4; // 90deg
   // cube.rotation.y = Math.PI / 2; // 90deg
 
   // Ambient Light
-  var ambient = new THREE.AmbientLight( 0x101010 );
-  scene.add( ambient );
+  var ambient = new THREE.AmbientLight(0xcccccc);
+  scene.add(ambient);
 
-  // Directional Light
-  var directionalLight = new THREE.DirectionalLight( 0xffffff );
-  directionalLight.position.set( 0, -70, 100 ).normalize();
-  scene.add( directionalLight );
+  // 2 Directional Lights
+  light = new THREE.DirectionalLight( 0xffffff );
+  light.position.set( 1, 1, 1 );
+  scene.add( light );
+  light = new THREE.DirectionalLight( 0x002288 );
+  light.position.set( -1, -1, -1 );
+  scene.add( light );
 
-  camera.position.z = 3;
+  // Axis display
+  scene.add( new THREE.AxisHelper( 20 ) );
+
+  window.addEventListener( 'resize', onWindowResize, false );
 };
 
 // Render the scene
@@ -64,7 +98,14 @@ var animate = () => {
   renderer.render(scene, camera);
 };
 
+// Resize canvas on browser resize
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
 init();
 
-//render();
-animate();
+render();
+//animate();
